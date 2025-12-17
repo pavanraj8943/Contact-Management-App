@@ -42,6 +42,11 @@ contactForm.addEventListener('submit', (e) => {
 
 function addContact({ name, countryCode, phoneNumber }) {
 
+    if (contactsList.classList.contains('empty-state')) {
+        contactsList.classList.remove('empty-state');
+        contactsList.innerHTML = '';
+    }
+
     const card = document.createElement('div');
     card.className = 'contact-card';
 
@@ -53,8 +58,4 @@ function addContact({ name, countryCode, phoneNumber }) {
     `;
 
     contactsList.appendChild(card);
-
 }
-
-
-
