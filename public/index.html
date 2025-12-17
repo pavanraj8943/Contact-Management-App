@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Management</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header">
+        <h1 class="app-title">Contact Management</h1>
+        <button id="addContactBtn" class="btn primary-btn">+ Add Contact</button>
+      </header>
+
+      <main class="app-main">
+        <section class="contacts-panel">
+          <div class="panel-header">
+            <h2>Contacts</h2>
+            <p class="panel-subtitle">All added contacts will appear here.</p>
+          </div>
+
+          <div id="contactsList" class="contacts-list empty-state">
+            <div class="empty-message">
+              <p>No contacts yet.</p>
+              <p>Click <strong>"Add Contact"</strong> to create your first one.</p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Add Contact Modal -->
+    <div id="contactModal" class="modal hidden">
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Contact</h2>
+          <button id="closeModalBtn" class="icon-btn" aria-label="Close form">
+            ✕
+          </button>
+        </div>
+
+        <form id="contactForm" class="form">
+          <div class="form-field">
+            <label for="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter full name"
+              required
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="countryCode">Country Code</label>
+              <input
+                type="text"
+                id="countryCode"
+                name="countryCode"
+                placeholder="+1, +44, +91..."
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label for="phoneNumber">Phone Number</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                placeholder="e.g. 9876543210"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn ghost-btn" id="cancelBtn">
+              Cancel
+            </button>
+            <button type="submit" class="btn primary-btn">
+              Save Contact
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="./main.js"></script>
+  </body>
+</html>
+
+
