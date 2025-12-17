@@ -10,9 +10,9 @@ import {
 
 const router = express.Router();
 
+router.get('/search', searchContact);
+router.get('/', getAllContacts);          
 router.post('/', createContact);
-router.get('/', getAllContacts);
-router.get('/search', searchContact); // MUST be before :id
 router.get('/:id', getContact);
 router.put('/:id', updateContact);
 router.delete('/:id', deleteContact);
