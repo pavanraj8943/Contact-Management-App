@@ -7,43 +7,74 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div class="app">
-      <header class="app-header">
-        <h1 class="app-title">Contact Management</h1>
-        <button id="addContactBtn" class="btn primary-btn">+ Add Contact</button>
-      </header>
-
-      <main class="app-main">
-        <section class="contacts-panel">
-          <div class="panel-header">
-            <h2>Contacts</h2>
-            <p class="panel-subtitle">All added contacts will appear here.</p>
+    <div class="app-container">
+      <div class="app-wrapper">
+        <header class="app-header">
+          <div class="header-content">
+            <h1 class="app-title"> Contact Manager</h1>
+            <p class="app-subtitle">Manage your contacts with ease</p>
           </div>
+          <button id="addContactBtn" class="btn btn-primary">
+            <span class="btn-icon">+</span>
+            <span>Add Contact</span>
+          </button>
+        </header>
 
-          <div id="contactsList" class="contacts-list empty-state">
-            <div class="empty-message">
-              <p>No contacts yet.</p>
-              <p>Click <strong>"Add Contact"</strong> to create your first one.</p>
+        <div class="main-content">
+          <div class="contacts-section">
+            <div class="section-header section-header-search">
+              <div class="section-title">
+                <h2>All Contacts</h2>
+                <span id="contactCount" class="contact-count">0 contacts</span>
+              </div>
+            
+              <div class="search-box">
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="Search contacts..."
+                />
+                <span class="search-icon">🔍</span>
+              </div>
+            </div>
+            
+            <div id="contactsList" class="contacts-list">
+              <div class="empty-state">
+                <div class="empty-icon"></div>
+                <p class="empty-title">No contacts yet</p>
+                <p class="empty-description">
+                  Click "Add Contact" to create your first contact
+                </p>
+              </div>
             </div>
           </div>
-        </section>
-      </main>
+
+          <div class="details-section" id="detailsSection">
+            <div class="details-placeholder">
+              <div class="placeholder-icon"></div>
+              <p class="placeholder-text">Select a contact to view details</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Add Contact Modal -->
+    <!-- Add/Edit Contact Modal -->
     <div id="contactModal" class="modal hidden">
       <div class="modal-backdrop"></div>
       <div class="modal-content">
         <div class="modal-header">
-          <h2>Add Contact</h2>
-          <button id="closeModalBtn" class="icon-btn" aria-label="Close form">
+          <h2 id="modalTitle">Add Contact</h2>
+          <button id="closeModalBtn" class="icon-btn" aria-label="Close">
             ✕
           </button>
         </div>
 
         <form id="contactForm" class="form">
+          <input type="hidden" id="contactId" name="contactId" />
+          
           <div class="form-field">
-            <label for="name">Name</label>
+            <label for="name">Full Name</label>
             <input
               type="text"
               id="name"
@@ -78,11 +109,11 @@
           </div>
 
           <div class="form-actions">
-            <button type="button" class="btn ghost-btn" id="cancelBtn">
+            <button type="button" class="btn btn-secondary" id="cancelBtn">
               Cancel
             </button>
-            <button type="submit" class="btn primary-btn">
-              Save Contact
+            <button type="submit" class="btn btn-primary">
+              <span id="submitBtnText">Save Contact</span>
             </button>
           </div>
         </form>
@@ -92,5 +123,3 @@
     <script src="./main.js"></script>
   </body>
 </html>
-
-

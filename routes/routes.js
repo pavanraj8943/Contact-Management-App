@@ -1,14 +1,18 @@
 import express from 'express';
-import { createContact,
-        getContact,
-        searchContact,
-        updateContact,
-        deleteContact
- } from '../controllers/contactController.js';
+import {
+  createContact,
+  getAllContacts,
+  getContact,
+  updateContact,
+  deleteContact,
+  searchContact
+} from '../controllers/contactController.js';
 
 const router = express.Router();
 
 router.post('/', createContact);
+router.get('/', getAllContacts);
+router.get('/search', searchContact); // MUST be before :id
 router.get('/:id', getContact);
 router.put('/:id', updateContact);
 router.delete('/:id', deleteContact);
