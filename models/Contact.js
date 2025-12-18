@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
 
-const contactSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    countryCode: { type: String, required: true },
-    phoneNumber: { type: String, required: true }
+const contactSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,   
+    trim: true
   },
-  { timestamps: true }
-);
+  countryCode: String,
+  phoneNumber: String
+}, { timestamps: true });
 
 export default mongoose.model('Contact', contactSchema);

@@ -21,7 +21,13 @@ export const createContact = async (req, res) => {
 
     res.status(201).json(contact);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    if (err.code === 11000) {
+      return res.status(409).json({
+        message: "Contact already exists"
+      });
+    }
+
+    res.status(500).json({ message: "Server error" });
   }
 };
 
