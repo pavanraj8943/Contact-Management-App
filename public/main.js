@@ -113,11 +113,12 @@ function applyFilters() {
   const search = searchInput.value.toLowerCase();
   const sort = sortFilter.value;
 
-  filteredContacts = allContacts.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search) ||
-      c.phoneNumber.includes(search)
-  );
+  filteredContacts = allContacts.filter((c) => {
+    const nameMatch = c.name.toLowerCase().startsWith(search);
+    const phnMatch = c.phoneNumber.startsWith(search);
+
+    return nameMatch || phnMatch;
+  });
 
   filteredContacts.sort((a, b) =>
     sort === "newest"
