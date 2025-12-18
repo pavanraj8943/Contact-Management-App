@@ -1,132 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact Management</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <div class="app-container">
-      <div class="app-wrapper">
-        <header class="app-header">
-          <div class="header-content">
-            <h1 class="app-title"> Contact Manager</h1>
-            <p class="app-subtitle">Manage your contacts with ease</p>
-          </div>
-          <button id="addContactBtn" class="btn btn-primary">
-            <span class="btn-icon">+</span>
-            <span>Add Contact</span>
-          </button>
-        </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Management</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
 
-        <div class="main-content">
-          <div class="contacts-section">
-            <div class="section-header section-header-search">
-              <div class="section-title">
-                <h2>All Contacts</h2>
-                <span id="contactCount" class="contact-count">0 contacts</span>
-              </div>
-            
-              <div class="search-box">
-                <input
-                  type="text"
-                  id="searchInput"
-                  placeholder="Search contacts..."
-                />
-                <span class="search-icon">🔍</span>
-              </div>
+<body>
+  <div class="app-container">
+    <div class="app-wrapper">
 
-              <div class="filter-box">
-                <select id="sortFilter">
-                  <option value="newest">New</option>
-                  <option value="oldest">Old</option>
-                </select>
-              </div>
+      <header class="app-header">
+        <div class="header-content">
+          <h1 class="app-title">Contact Manager</h1>
+          <p class="app-subtitle">Manage your contacts with ease</p>
+        </div>
+        <button id="addContactBtn" class="btn btn-primary">
+          <span class="btn-icon">+</span>
+          <span>Add Contact</span>
+        </button>
+      </header>
+
+      <div class="main-content">
+        <div class="contacts-section">
+
+          <div class="section-header section-header-search">
+            <div class="section-title">
+              <h2>All Contacts</h2>
+              <span id="contactCount" class="contact-count">0 contacts</span>
             </div>
-            
-            <div id="contactsList" class="contacts-list">
-              <div class="empty-state">
-                <div class="empty-icon"></div>
-                <p class="empty-title">No contacts yet</p>
-                <p class="empty-description">
-                  Click "Add Contact" to create your first contact
-                </p>
-              </div>
+
+            <div class="search-box">
+              <input type="text" id="searchInput" placeholder="Search contacts..." />
+            </div>
+
+            <div class="filter-box">
+              <select id="sortFilter">
+                <option value="newest">New</option>
+                <option value="oldest">Old</option>
+              </select>
             </div>
           </div>
 
-          <div class="details-section" id="detailsSection">
-            <div class="details-placeholder">
-              <div class="placeholder-icon"></div>
-              <p class="placeholder-text">Select a contact to view details</p>
+          <div id="contactsList" class="contacts-list">
+            <div class="empty-state">
+              <p class="empty-title">No contacts yet</p>
             </div>
           </div>
+
+          <div class="pagination-controls"
+            style="padding:16px; display:flex; justify-content:center; gap:16px;">
+            <button id="prevPageBtn" class="btn btn-secondary">Previous</button>
+            <span id="pageInfo"></span>
+            <button id="nextPageBtn" class="btn btn-secondary">Next</button>
+          </div>
+
+        </div>
+
+        <div class="details-section" id="detailsSection">
+          <p class="placeholder-text">Select a contact to view details</p>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Add/Edit Contact Modal -->
-    <div id="contactModal" class="modal hidden">
-      <div class="modal-backdrop"></div>
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2 id="modalTitle">Add Contact</h2>
-          <button id="closeModalBtn" class="icon-btn" aria-label="Close">
-            ✕
-          </button>
-        </div>
-
-        <form id="contactForm" class="form">
-          <input type="hidden" id="contactId" name="contactId" />
-          
-          <div class="form-field">
-            <label for="name">Full Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Enter full name"
-              required
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-field">
-              <label for="countryCode">Country Code</label>
-              <input
-                type="text"
-                id="countryCode"
-                name="countryCode"
-                placeholder="+1, +44, +91..."
-                required
-              />
-            </div>
-
-            <div class="form-field">
-              <label for="phoneNumber">Phone Number</label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                placeholder="e.g. 9876543210"
-                required
-              />
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" id="cancelBtn">
-              Cancel
-            </button>
-            <button type="submit" class="btn btn-primary">
-              <span id="submitBtnText">Save Contact</span>
-            </button>
-          </div>
-        </form>
+  <div id="contactModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Contact</h2>
+        <button id="closeModalBtn" class="icon-btn">✕</button>
       </div>
-    </div>
 
-    <script src="./main.js"></script>
-  </body>
+      <form id="contactForm" class="form">
+        <input id="name" placeholder="Full Name" required />
+        <input id="countryCode" value="+" placeholder="+91,+1" required />
+        <input id="phoneNumber" placeholder="eg: 9876542343" required />
+        <button type="submit" class="btn btn-primary">
+          <span id="submitBtnText">Save Contact</span>
+        </button>
+        <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="./main.js"></script>
+</body>
 </html>
