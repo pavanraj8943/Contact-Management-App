@@ -5,12 +5,12 @@ import {
   getContact,
   updateContact,
   deleteContact,
-  searchContact
+
 } from '../controllers/contactController.js';
 
 const router = express.Router();
 
-router.get('/search', searchContact);
+
 router.get('/', getAllContacts);          
 router.post('/', createContact);
 router.get('/:id', getContact);

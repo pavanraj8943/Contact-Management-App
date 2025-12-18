@@ -1,6 +1,5 @@
 import Contact from '../models/Contact.js';
 
-// CREATE
 export const createContact = async (req, res) => {
   try {
     const { name, countryCode, phoneNumber } = req.body;
@@ -57,17 +56,3 @@ export const deleteContact = async (req, res) => {
   }
 };
 
-export const searchContact = async (req, res) => {
-  const { q } = req.query;
-
-  if (!q) return res.json([]);
-
-  try {
-    const contacts = await Contact.find({
-      name: { $regex: q, $options: 'i' }
-    });
-    res.json(contacts);
-  } catch (error) {
-    res.status(500).json({ message: 'Search failed' });
-  }
-};

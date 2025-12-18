@@ -479,6 +479,15 @@ body {
   word-break: break-word;
 }
 
+.filter-box select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  cursor: pointer;
+}
+ 
+
 /* ===== MODAL ===== */
 .modal {
   position: fixed;

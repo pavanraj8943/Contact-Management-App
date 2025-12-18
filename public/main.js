@@ -1,92 +1,141 @@
-const addContactBtn = document.getElementById('addContactBtn');
-const modal = document.getElementById('contactModal');
-const closeModalBtn = document.getElementById('closeModalBtn');
-const cancelBtn = document.getElementById('cancelBtn');
-const contactForm = document.getElementById('contactForm');
-const contactsList = document.getElementById('contactsList');
-const detailsSection = document.getElementById('detailsSection');
-const contactCount = document.getElementById('contactCount');
-const modalTitle = document.getElementById('modalTitle');
-const submitBtnText = document.getElementById('submitBtnText');
-const contactIdInput = document.getElementById('contactId');
-const searchInput = document.getElementById('searchInput');
+const API_URL = "/api/contacts";
 
-let contacts = [];
-let selectedContactId = null;
+const addContactBtn = document.getElementById("addContactBtn");
+const modal = document.getElementById("contactModal");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+const form = document.getElementById("contactForm");
 
-async function loadContacts() {
-  try {
-    const res = await fetch('http://localhost:3000/api/contacts');
-    contacts = await res.json();
-    renderContacts();
-  } catch {
-    alert('Failed to load contacts');
-  }
-}
+const contactsList = document.getElementById("contactsList");
+const contactCount = document.getElementById("contactCount");
 
-function openModal(contact) {
+const modalTitle = document.getElementById("modalTitle");
+const submitBtnText = document.getElementById("submitBtnText");
+
+const nameInput = document.getElementById("name");
+const countryCodeInput = document.getElementById("countryCode");
+const phoneInput = document.getElementById("phoneNumber");
+
+const searchInput = document.getElementById("searchInput");
+const sortFilter = document.getElementById("sortFilter");
+
+let editingId = null;
+
+let allContacts = [];
+let filteredContacts = [];
+
+let currentPage = 1;
+const limit = 5;
+
+function openModal(contact = null) {
+  modal.classList.remove("hidden");
+
   if (contact) {
-    modalTitle.textContent = 'Edit Contact';
-    submitBtnText.textContent = 'Update Contact';
-    contactIdInput.value = contact._id;
-    contactForm.name.value = contact.name;
-    contactForm.countryCode.value = contact.countryCode;
-    contactForm.phoneNumber.value = contact.phoneNumber;
+    modalTitle.textContent = "Edit Contact";
+    submitBtnText.textContent = "Update Contact";
+
+    nameInput.value = contact.name;
+    countryCodeInput.value = contact.countryCode;
+    phoneInput.value = contact.phoneNumber;
+
+    editingId = contact._id;
   } else {
-    modalTitle.textContent = 'Add Contact';
-    submitBtnText.textContent = 'Save Contact';
-    contactForm.reset();
-    contactIdInput.value = '';
+    modalTitle.textContent = "Add Contact";
+    submitBtnText.textContent = "Save Contact";
+    form.reset();
+    editingId = null;
   }
-  modal.classList.remove('hidden');
 }
 
 function closeModal() {
-  modal.classList.add('hidden');
-  contactForm.reset();
+  modal.classList.add("hidden");
+  form.reset();
+  editingId = null;
 }
 
-addContactBtn.onclick = () => openModal();
-closeModalBtn.onclick = cancelBtn.onclick = closeModal;
+addContactBtn.addEventListener("click", () => openModal());
+closeModalBtn.addEventListener("click", closeModal);
+cancelBtn.addEventListener("click", closeModal);
 
-contactForm.onsubmit = async (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const data = {
-    name: contactForm.name.value,
-    countryCode: contactForm.countryCode.value,
-    phoneNumber: contactForm.phoneNumber.value
+    name: nameInput.value,
+    countryCode: countryCodeInput.value,
+    phoneNumber: phoneInput.value,
   };
 
-  const id = contactIdInput.value;
-  const url = id
-    ? `http://localhost:3000/api/contacts/${id}`
-    : 'http://localhost:3000/api/contacts';
+  const url = editingId ? `${API_URL}/${editingId}` : API_URL;
+  const method = editingId ? "PUT" : "POST";
 
-  const method = id ? 'PUT' : 'POST';
-
-  const res = await fetch(url, {
+  await fetch(url, {
     method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
   });
 
-  await res.json();
   closeModal();
   loadContacts();
-};
+});
 
-function renderContacts() {
-  if (!contacts.length) {
-    contactsList.innerHTML = '<p>No contacts</p>';
-    contactCount.textContent = '0 contacts';
+async function loadContacts() {
+  try {
+    const res = await fetch(API_URL);
+    allContacts = await res.json();
+
+    applyFilters();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function applyFilters() {
+  const searchValue = searchInput.value.toLowerCase();
+  const sortValue = sortFilter.value;
+
+  filteredContacts = allContacts.filter((c) => {
+    return (
+      c.name.toLowerCase().includes(searchValue) ||
+      c.phoneNumber.includes(searchValue)
+    );
+  });
+
+  if (sortValue === "newest") {
+    filteredContacts.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+  } else {
+    filteredContacts.sort(
+      (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+    );
+  }
+
+  currentPage = 1;
+  renderPage();
+}
+
+function renderPage() {
+  const start = (currentPage - 1) * limit;
+  const end = start + limit;
+  const pageData = filteredContacts.slice(start, end);
+
+  if (!pageData.length) {
+    contactsList.innerHTML = `
+      <div class="empty-state">
+        <p class="empty-title">No contacts found</p>
+      </div>
+    `;
+    contactCount.textContent = "0 contacts";
     return;
   }
 
-  contactsList.innerHTML = contacts.map(c => `
+  contactsList.innerHTML = pageData
+    .map(
+      (c) => `
     <div class="contact-card">
       <div>
-        <strong>${escapeHtml(c.name)}</strong><br>
+        <strong>${escapeHtml(c.name)}</strong><br />
         ${escapeHtml(c.countryCode)} ${escapeHtml(c.phoneNumber)}
       </div>
       <div>
@@ -94,41 +143,32 @@ function renderContacts() {
         <button onclick="deleteContact('${c._id}')">🗑️</button>
       </div>
     </div>
-  `).join('');
+  `
+    )
+    .join("");
 
-  contactCount.textContent = `${contacts.length} contacts`;
+  contactCount.textContent = `${filteredContacts.length} contacts`;
 }
 
+searchInput.addEventListener("input", applyFilters);
+sortFilter.addEventListener("change", applyFilters);
+
 window.editContact = (id) => {
-  const contact = contacts.find(c => c._id === id);
+  const contact = allContacts.find((c) => c._id === id);
   if (contact) openModal(contact);
 };
 
 window.deleteContact = async (id) => {
-  if (!confirm('Delete contact?')) return;
-  await fetch(`http://localhost:3000/api/contacts/${id}`, { method: 'DELETE' });
+  if (!confirm("Delete contact?")) return;
+  await fetch(`${API_URL}/${id}`, { method: "DELETE" });
   loadContacts();
 };
 
-searchInput.addEventListener('input', async (e) => {
-  const q = e.target.value.trim();
-
-  if (!q) {
-    loadContacts();
-    return;
-  }
-
-  const res = await fetch(
-    `http://localhost:3000/api/contacts/search?q=${q}`
-  );
-  contacts = await res.json();
-  renderContacts();
-});
-
 function escapeHtml(text) {
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
 }
+
 
 loadContacts();
