@@ -139,8 +139,8 @@ function renderPage() {
   const totalPages = Math.ceil(filteredContacts.length / PAGE_LIMIT) || 1;
   pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
 
-  prevPageBtn.disabled = currentPage === 1;
-  nextPageBtn.disabled = currentPage === totalPages;
+  prevPageBtn.style.display = currentPage === 1 ? "none" : "inline-block";
+  nextPageBtn.style.display = currentPage === totalPages ? "none" : "inline-block";
 }
 
 prevPageBtn.onclick = () => {
